@@ -20,6 +20,7 @@ export default function ImageModal({ isOpen, onClose, imageSrc }) {
       isOpen={isOpen}
       onRequestClose={onClose}
       contentLabel="Image Modal"
+      appElement={document.getElementById("root")}
       style={{
         overlay: {
           backgroundColor: "rgba(0, 0, 0, 0.75)",
@@ -36,7 +37,10 @@ export default function ImageModal({ isOpen, onClose, imageSrc }) {
           background: "none",
           maxWidth: "80%",
           maxHeight: "80%",
+          display: "flex",
           overflow: "hidden",
+          justifyContent: "center",
+          alignItems: "center",
         },
       }}
       onClick={onClose}

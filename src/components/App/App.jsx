@@ -15,23 +15,32 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     if (topic === "") {
+      setHasMore(false);
       return;
     }
+
     async function getPictures() {
       try {
         setLoading(true);
         setError(false);
         const newPictures = await fetchPictures(topic, page);
-        setPictures(prevState => [...prevState, ...newPictures]);
+
+        if (newPictures.length === 0) {
+          setHasMore(false);
+        } else {
+          setPictures(prevState => [...prevState, ...newPictures]);
+        }
       } catch (error) {
         setError(true);
       } finally {
         setLoading(false);
       }
     }
+
     getPictures();
   }, [topic, page]);
 
@@ -39,10 +48,11 @@ export default function App() {
     setTopic(newTopic);
     setPage(1);
     setPictures([]);
+    setHasMore(true);
   };
 
   const handleLoadMore = () => {
-    setPage(page + 1);
+    setPage(prevPage => prevPage + 1);
   };
 
   const handleImageClick = imageSrc => {
@@ -52,13 +62,25 @@ export default function App() {
   const closeModal = () => {
     setSelectedImage(null);
   };
+
+  useEffect(() => {
+    if (pictures.length > 0) {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [pictures]);
+
   return (
     <div>
       <SearchBar onSearch={handleSearch} />
       <ImageGallery items={pictures} onImageClick={handleImageClick} />
-      {pictures.length > 0 && <LoadMoreBtn onClick={handleLoadMore} />}
+
       {error && <ErrorMessage />}
       {loading && <Loader />}
+      {hasMore && <LoadMoreBtn onClick={handleLoadMore} />}
+
       <ImageModal
         isOpen={!!selectedImage}
         onClose={closeModal}
