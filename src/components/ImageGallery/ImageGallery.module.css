@@ -1,0 +1,14 @@
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 стовпці однакової ширини */
+  gap: 16px; /* Відстань між картинками */
+  padding: 8px;
+  box-sizing: border-box; /* Ураховує padding і border в загальному розмірі елемента */
+  max-height: calc(
+    100vh - 60px
+  ); /* Обмежити висоту галереї (60px - висота header) */
+}
+
+.gallery li {
+  list-style: none; /* Прибирає маркери списку */
+}
